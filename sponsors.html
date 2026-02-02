@@ -7,22 +7,24 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        body {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: black;
-            color: white;
+            background-color: #000;
+            color: #fff;
             font-family: 'Arial Black', Arial, sans-serif;
             text-align: center;
             overflow: hidden;
-            transition: background-color 0.8s ease;
+            position: relative;
         }
-
         #particles-js {
             position: absolute;
             width: 100%;
@@ -32,10 +34,9 @@
             pointer-events: none;
             z-index: 1;
         }
-
-        #text {
+        #content {
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
             width: 100%;
             height: 100%;
             display: flex;
@@ -44,14 +45,13 @@
             align-items: center;
             position: relative;
             z-index: 2;
+            padding: 20px;
         }
-
-        #text.visible {
+        #content.visible {
             opacity: 1;
         }
-
         .title-3d {
-            font-size: 9vw;
+            font-size: clamp(2.5rem, 9vw, 6rem);
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.15em;
@@ -60,135 +60,199 @@
                 0 0 20px rgba(255,255,255,0.9),
                 0 0 40px rgba(255,255,255,0.7),
                 0 0 60px rgba(255,255,255,0.5),
-                0 0 80px rgba(255,255,255,0.3),
                 5px 5px 10px rgba(0,0,0,0.8),
-                10px 10px 20px rgba(0,0,0,0.6),
-                15px 15px 30px rgba(0,0,0,0.5);
+                10px 10px 20px rgba(0,0,0,0.6);
             transform: perspective(1000px) rotateX(20deg);
             animation: titleZoom 6s infinite ease-in-out;
+            margin-bottom: 30px;
         }
-
         @keyframes titleZoom {
-            0%   { transform: perspective(1000px) rotateX(20deg) scale(0.8); }
-            50%  { transform: perspective(1000px) rotateX(20deg) scale(1.3); }
-            100% { transform: perspective(1000px) rotateX(20deg) scale(0.8); }
+            0%, 100% { transform: perspective(1000px) rotateX(20deg) scale(0.9); }
+            50% { transform: perspective(1000px) rotateX(20deg) scale(1.1); }
         }
-
         .sponsor-container {
-            font-size: 9vw;
+            font-size: clamp(2rem, 9vw, 4rem);
             font-weight: bold;
-            text-shadow: 0 0 40px rgba(255,255,255,1);
+            text-shadow: 0 0 30px rgba(255,255,255,0.8);
             animation: sponsorPulse 2s infinite alternate;
+            padding: 20px;
         }
-
         @keyframes sponsorPulse {
-            0% { text-shadow: 0 0 40px rgba(255,255,255,1); }
-            100% { text-shadow: 0 0 80px rgba(255,255,255,1); }
+            0% { text-shadow: 0 0 30px rgba(255,255,255,0.8); }
+            100% { text-shadow: 0 0 60px rgba(255,255,255,1); }
         }
-
         .sponsor-name {
-            font-size: 1.2em;
+            font-size: 1em;
+            margin-bottom: 10px;
         }
-
         .sponsor-stars {
-            font-size: 0.75em;
-            margin-top: 8px;
+            font-size: 0.6em;
             opacity: 0.9;
+            color: #FFD700;
         }
-
         .all-sponsors-container {
-            width: 92%;
+            width: 95%;
             max-width: 900px;
-            height: 82vh;
-            margin: 20px;
+            height: 80vh;
+            margin: 20px auto;
             opacity: 0;
             overflow-y: auto;
-            padding: 30px 20px;
-            box-sizing: border-box;
+            padding: 25px 20px;
             border-radius: 20px;
-            background: rgba(0, 0, 60, 0.6);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 50px rgba(0, 100, 255, 0.6);
-            transition: opacity 0.3s ease;
+            background: rgba(0, 0, 60, 0.7);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 40px rgba(0, 100, 255, 0.5);
+            transition: opacity 0.5s ease;
             z-index: 2;
         }
-
         .all-sponsors-container.visible {
             opacity: 1;
         }
-
         .all-sponsors {
-            font-size: 4.8vw;
-            line-height: 1.7;
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            line-height: 1.6;
             text-align: left;
         }
-
-        @media (min-width: 768px) { .all-sponsors { font-size: 3.2vw; } }
-        @media (min-width: 1200px) { .all-sponsors { font-size: 2.8vw; } }
-
         .all-sponsors .sponsor-item {
             opacity: 0;
-            transform: translateY(30px) scale(0.9);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-            margin-bottom: 10px;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
         .all-sponsors-container.visible .sponsor-item {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(0);
         }
-
         .all-sponsors .rank {
             display: inline-block;
-            width: 3.2em;
-            font-size: 1.2em;
-            color: #FFD700;
+            width: 3.5em;
+            font-size: 1.1em;
             font-weight: bold;
+            text-align: right;
+            padding-right: 10px;
         }
-
-        .all-sponsors .top1 { color: #FFFF00; font-size: 1.4em; }
+        .all-sponsors .top1 { color: #FFD700; font-size: 1.3em; }
         .all-sponsors .top2 { color: #C0C0C0; }
         .all-sponsors .top3 { color: #CD7F32; }
-
         .all-sponsors .stars {
             font-size: 0.9em;
             opacity: 0.9;
-            margin-left: 12px;
+            margin-left: 15px;
             color: #FFFF99;
+            float: right;
         }
-
         .all-sponsors-container::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
-        .all-sponsors-container::-webkit-scrollbar-track { background: transparent; }
+        .all-sponsors-container::-webkit-scrollbar-track { 
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
         .all-sponsors-container::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.3);
-            border-radius: 5px;
+            border-radius: 4px;
         }
         .all-sponsors-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 60, 0.7);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-family: 'Arial Black', Arial, sans-serif;
+            font-size: 1rem;
+        }
+        .back-button:hover {
+            background: rgba(0, 100, 255, 0.8);
+            border-color: rgba(255,255,255,0.7);
+            transform: scale(1.05);
+        }
+        .click-instruction {
+            position: fixed;
+            bottom: 30px;
+            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+            z-index: 3;
+            animation: fadeInOut 2s infinite;
+        }
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        @media (max-width: 768px) {
+            .title-3d {
+                font-size: clamp(2rem, 8vw, 4rem);
+                margin-bottom: 20px;
+            }
+            .sponsor-container {
+                font-size: clamp(1.5rem, 7vw, 3rem);
+                padding: 15px;
+            }
+            .all-sponsors-container {
+                height: 70vh;
+                padding: 20px 15px;
+            }
+            .all-sponsors {
+                font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            }
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .all-sponsors .rank {
+                width: 2.8em;
+                font-size: 1em;
+            }
+            .all-sponsors .stars {
+                margin-left: 8px;
+                font-size: 0.8em;
+            }
+            .click-instruction {
+                font-size: 0.9rem;
+                bottom: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
-    <div id="text">Нажми.</div>
-
-    <audio id="audio" src="cool-intro.mp3" preload="auto"></audio>
-    <audio id="backAudio" src="Back.mp3" preload="auto"></audio>
+    <div id="content">Нажми на экран, чтобы начать</div>
+    <div class="click-instruction" id="instruction">Нажми для продолжения</div>
+    <button class="back-button" id="backButton" style="display:none;">← Назад</button>
+    <audio id="audio" preload="auto">
+        <source src="cool-intro.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="backAudio" preload="auto">
+        <source src="Back.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         particlesJS('particles-js', {
             particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
+                number: { value: 60, density: { enable: true, value_area: 800 } },
                 color: { value: ['#FFD700', '#FFFFFF', '#FFAA00'] },
                 shape: { type: 'circle' },
-                opacity: { value: 0.8, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1 } },
-                size: { value: 4, random: true, anim: { enable: true, speed: 4, size_min: 1 } },
+                opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.2 } },
+                size: { value: 3, random: true, anim: { enable: true, speed: 3, size_min: 1 } },
                 line_linked: { enable: false },
                 move: {
                     enable: true,
-                    speed: 2,
+                    speed: 1.5,
                     direction: 'none',
                     random: true,
                     straight: false,
@@ -198,144 +262,156 @@
             },
             interactivity: {
                 events: {
-                    onhover: { enable: true, mode: 'repulse' },
-                    onclick: { enable: true, mode: 'push' },
+                    onhover: { enable: false },
+                    onclick: { enable: false },
                     resize: true
                 }
             },
             retina_detect: true
         });
 
-        const textElement = document.getElementById('text');
+        const contentElement = document.getElementById('content');
+        const instructionElement = document.getElementById('instruction');
+        const backButton = document.getElementById('backButton');
         const audio = document.getElementById('audio');
         const backAudio = document.getElementById('backAudio');
         const body = document.body;
 
-        const sponsors = [
-            { name: "@Leeenoobligations",   stars: 15 },
-            { name: "@sigvo",   stars: 15 },
-            { name: "Sponsor3",   stars: 0 },
-            { name: "Sponsor4",   stars: 0 },
-            { name: "Sponsor5",   stars: 0 },
-            { name: "Sponsor6",   stars: 0 },
-            { name: "Sponsor7",   stars: 0 },
-            { name: "Sponsor8",   stars: 0 },
-            { name: "Sponsor9",   stars: 0 },
-            { name: "Sponsor10",  stars: 0 },
-            { name: "Sponsor11",  stars: 0 },
-            { name: "Sponsor12",  stars: 0 },
-            { name: "Sponsor13",  stars: 0 },
-            { name: "Sponsor14",  stars: 0 },
-            { name: "Sponsor15",  stars: 0 },
-            { name: "Sponsor16",  stars: 0 },
-            { name: "Sponsor17",  stars: 0 },
-            { name: "Sponsor18",  stars: 0 },
-            { name: "Sponsor19",  stars: 0 },
-            { name: "Sponsor20",  stars: 0 },
-            { name: "Sponsor21",  stars: 0 },
-            { name: "Sponsor22",  stars: 0 },
-            { name: "Sponsor23",  stars: 0 },
-            { name: "Sponsor24",  stars: 0 },
-            { name: "Sponsor25",  stars: 0 },
-            { name: "Sponsor26",  stars: 0 },
-            { name: "Sponsor27",  stars: 0 },
-            { name: "Sponsor28",  stars: 0 },
-            { name: "Sponsor29",  stars: 0 },
-            { name: "Sponsor30",  stars: 0 },
-            { name: "Sponsor31",  stars: 0 },
-            { name: "Sponsor32",  stars: 0 },
-            { name: "Sponsor33",  stars: 0 },
-            { name: "Sponsor34",  stars: 0 },
-            { name: "Sponsor35",  stars: 0 },
-            { name: "Sponsor36",  stars: 0 },
-            { name: "Sponsor37",  stars: 0 },
-            { name: "Sponsor38",  stars: 0 },
-            { name: "Sponsor39",  stars: 0 },
-            { name: "Sponsor40",  stars: 0 },
-            { name: "Sponsor41",  stars: 0 },
-            { name: "Sponsor42",  stars: 0 },
-            { name: "Sponsor43",  stars: 0 },
-            { name: "Sponsor44",  stars: 0 },
-            { name: "Sponsor45",  stars: 0 },
-            { name: "Sponsor46",  stars: 0 },
-            { name: "Sponsor47",  stars: 0 },
-            { name: "Sponsor48",  stars: 0 },
-            { name: "Sponsor49",  stars: 0 },
-            { name: "Sponsor50",  stars: 0 },
-            { name: "Sponsor51",  stars: 0 },
-            { name: "Sponsor52",  stars: 0 },
-            { name: "Sponsor53",  stars: 0 },
-            { name: "Sponsor54",  stars: 0 },
-            { name: "Sponsor55",  stars: 0 },
-            { name: "Sponsor56",  stars: 0 },
-            { name: "Sponsor57",  stars: 0 },
-            { name: "Sponsor58",  stars: 0 },
-            { name: "Sponsor59",  stars: 0 },
-            { name: "Sponsor60",  stars: 0 },
-            { name: "Sponsor61",  stars: 0 },
-            { name: "Sponsor62",  stars: 0 },
-            { name: "Sponsor63",  stars: 0 },
-            { name: "Sponsor64",  stars: 0 },
-            { name: "Sponsor65",  stars: 0 },
-            { name: "Sponsor66",  stars: 0 },
-            { name: "Sponsor67",  stars: 0 },
-            { name: "Sponsor68",  stars: 0 },
-            { name: "Sponsor69",  stars: 0 },
-            { name: "Sponsor70",  stars: 0 },
-            { name: "Sponsor71",  stars: 0 },
-            { name: "Sponsor72",  stars: 0 },
-            { name: "Sponsor73",  stars: 0 },
-            { name: "Sponsor74",  stars: 0 },
-            { name: "Sponsor75",  stars: 0 },
-            { name: "Sponsor76",  stars: 0 },
-            { name: "Sponsor77",  stars: 0 },
-            { name: "Sponsor78",  stars: 0 },
-            { name: "Sponsor79",  stars: 0 },
-            { name: "Sponsor80",  stars: 0 },
-            { name: "Sponsor81",  stars: 0 },
-            { name: "Sponsor82",  stars: 0 },
-            { name: "Sponsor83",  stars: 0 },
-            { name: "Sponsor84",  stars: 0 },
-            { name: "Sponsor85",  stars: 0 },
-            { name: "Sponsor86",  stars: 0 },
-            { name: "Sponsor87",  stars: 0 },
-            { name: "Sponsor88",  stars: 0 },
-            { name: "Sponsor89",  stars: 0 },
-            { name: "Sponsor90",  stars: 0 },
-            { name: "Sponsor91",  stars: 0 },
-            { name: "Sponsor92",  stars: 0 },
-            { name: "Sponsor93",  stars: 0 },
-            { name: "Sponsor94",  stars: 0 },
-            { name: "Sponsor95",  stars: 0 },
-            { name: "Sponsor96",  stars: 0 },
-            { name: "Sponsor97",  stars: 0 },
-            { name: "Sponsor98",  stars: 0 },
-            { name: "Sponsor99",  stars: 0 },
-            { name: "Sponsor100", stars: 0 }
-        ];
+        let currentStep = 0;
+        let sequenceTimeout = null;
+        let isSequenceActive = false;
+
+const sponsors = [
+    { name: "@Leeenoobligations", stars: 15 },
+    { name: "@sigvo", stars: 15 },
+    { name: "Sponsor3", stars: 10 },
+    { name: "Sponsor4", stars: 10 },
+    { name: "Sponsor5", stars: 10 },
+    { name: "Sponsor6", stars: 9 },
+    { name: "Sponsor7", stars: 9 },
+    { name: "Sponsor8", stars: 9 },
+    { name: "Sponsor9", stars: 8 },
+    { name: "Sponsor10", stars: 8 },
+    { name: "Sponsor11", stars: 8 },
+    { name: "Sponsor12", stars: 7 },
+    { name: "Sponsor13", stars: 7 },
+    { name: "Sponsor14", stars: 7 },
+    { name: "Sponsor15", stars: 6 },
+    { name: "Sponsor16", stars: 6 },
+    { name: "Sponsor17", stars: 6 },
+    { name: "Sponsor18", stars: 5 },
+    { name: "Sponsor19", stars: 5 },
+    { name: "Sponsor20", stars: 5 },
+    { name: "Sponsor21", stars: 4 },
+    { name: "Sponsor22", stars: 4 },
+    { name: "Sponsor23", stars: 4 },
+    { name: "Sponsor24", stars: 3 },
+    { name: "Sponsor25", stars: 3 },
+    { name: "Sponsor26", stars: 3 },
+    { name: "Sponsor27", stars: 2 },
+    { name: "Sponsor28", stars: 2 },
+    { name: "Sponsor29", stars: 2 },
+    { name: "Sponsor30", stars: 1 },
+    { name: "Sponsor31", stars: 1 },
+    { name: "Sponsor32", stars: 1 },
+    { name: "Sponsor33", stars: 1 },
+    { name: "Sponsor34", stars: 1 },
+    { name: "Sponsor35", stars: 1 },
+    { name: "Sponsor36", stars: 1 },
+    { name: "Sponsor37", stars: 1 },
+    { name: "Sponsor38", stars: 1 },
+    { name: "Sponsor39", stars: 1 },
+    { name: "Sponsor40", stars: 1 },
+    { name: "Sponsor41", stars: 1 },
+    { name: "Sponsor42", stars: 1 },
+    { name: "Sponsor43", stars: 1 },
+    { name: "Sponsor44", stars: 1 },
+    { name: "Sponsor45", stars: 1 },
+    { name: "Sponsor46", stars: 1 },
+    { name: "Sponsor47", stars: 1 },
+    { name: "Sponsor48", stars: 1 },
+    { name: "Sponsor49", stars: 1 },
+    { name: "Sponsor50", stars: 1 },
+    { name: "Sponsor51", stars: 1 },
+    { name: "Sponsor52", stars: 1 },
+    { name: "Sponsor53", stars: 1 },
+    { name: "Sponsor54", stars: 1 },
+    { name: "Sponsor55", stars: 1 },
+    { name: "Sponsor56", stars: 1 },
+    { name: "Sponsor57", stars: 1 },
+    { name: "Sponsor58", stars: 1 },
+    { name: "Sponsor59", stars: 1 },
+    { name: "Sponsor60", stars: 1 },
+    { name: "Sponsor61", stars: 1 },
+    { name: "Sponsor62", stars: 1 },
+    { name: "Sponsor63", stars: 1 },
+    { name: "Sponsor64", stars: 1 },
+    { name: "Sponsor65", stars: 1 },
+    { name: "Sponsor66", stars: 1 },
+    { name: "Sponsor67", stars: 1 },
+    { name: "Sponsor68", stars: 1 },
+    { name: "Sponsor69", stars: 1 },
+    { name: "Sponsor70", stars: 1 },
+    { name: "Sponsor71", stars: 1 },
+    { name: "Sponsor72", stars: 1 },
+    { name: "Sponsor73", stars: 1 },
+    { name: "Sponsor74", stars: 1 },
+    { name: "Sponsor75", stars: 1 },
+    { name: "Sponsor76", stars: 1 },
+    { name: "Sponsor77", stars: 1 },
+    { name: "Sponsor78", stars: 1 },
+    { name: "Sponsor79", stars: 1 },
+    { name: "Sponsor80", stars: 1 },
+    { name: "Sponsor81", stars: 1 },
+    { name: "Sponsor82", stars: 1 },
+    { name: "Sponsor83", stars: 1 },
+    { name: "Sponsor84", stars: 1 },
+    { name: "Sponsor85", stars: 1 },
+    { name: "Sponsor86", stars: 1 },
+    { name: "Sponsor87", stars: 1 },
+    { name: "Sponsor88", stars: 1 },
+    { name: "Sponsor89", stars: 1 },
+    { name: "Sponsor90", stars: 1 },
+    { name: "Sponsor91", stars: 1 },
+    { name: "Sponsor92", stars: 1 },
+    { name: "Sponsor93", stars: 1 },
+    { name: "Sponsor94", stars: 1 },
+    { name: "Sponsor95", stars: 1 },
+    { name: "Sponsor96", stars: 1 },
+    { name: "Sponsor97", stars: 1 },
+    { name: "Sponsor98", stars: 1 },
+    { name: "Sponsor99", stars: 1 },
+    { name: "Sponsor100", stars: 1 }
+];
+
+        for (let i = 11; i <= 100; i++) {
+            sponsors.push({ name: `Sponsor${i}`, stars: 0 });
+        }
 
         sponsors.sort((a, b) => b.stars - a.stars);
 
-        const colors = ['#FFFF00', '#FF0000', '#FF00FF', '#00FFFF', '#00FF00'];
+        const colors = ['#FFD700', '#C0C0C0', '#CD7F32', '#00FFFF', '#00FF00'];
 
         function launchConfetti() {
             confetti({
-                particleCount: 150,
-                spread: 70,
+                particleCount: 100,
+                spread: 60,
                 origin: { y: 0.6 },
-                colors: ['#FFD700', '#FFAA00', '#FFFFFF', '#FF4500']
+                colors: ['#FFD700', '#FFAA00', '#FFFFFF'],
+                disableForReducedMotion: true
             });
         }
 
-        function showContent(html, backgroundColor, callback) {
-            textElement.classList.remove('visible');
-            setTimeout(() => {
-                body.style.backgroundColor = backgroundColor || 'black';
-                textElement.innerHTML = html;
-                textElement.className = '';
-                textElement.classList.add('visible');
-                if (callback) callback();
-            }, 300);
+        function showContent(html, backgroundColor) {
+            return new Promise((resolve) => {
+                contentElement.classList.remove('visible');
+                setTimeout(() => {
+                    body.style.backgroundColor = backgroundColor || '#000';
+                    contentElement.innerHTML = html;
+                    contentElement.classList.add('visible');
+                    setTimeout(resolve, 300);
+                }, 300);
+            });
         }
 
         function showSponsor(index) {
@@ -346,14 +422,14 @@
                     <div class="sponsor-stars">${s.stars} ⭐</div>
                 </div>
             `;
-            showContent(html, colors[index], () => {
+            return showContent(html, colors[index]).then(() => {
                 launchConfetti();
             });
         }
 
         function showTitle() {
             const html = '<div class="title-3d">ТОП 100 СПОНСОРОВ</div>';
-            showContent(html, 'black');
+            return showContent(html, '#000');
         }
 
         function showAllSponsors() {
@@ -364,45 +440,131 @@
                 else if (i === 1) rankClass = 'top2';
                 else if (i === 2) rankClass = 'top3';
 
-                listHTML += `<div class="sponsor-item" style="transition-delay: ${i * 0.06}s;">
+                listHTML += `<div class="sponsor-item" style="transition-delay: ${Math.min(i * 0.03, 1)}s;">
                     <span class="rank ${rankClass}">${i+1}.</span> ${s.name} <span class="stars">${s.stars} ⭐</span>
                 </div>`;
             });
             listHTML += '</div></div>';
 
-            showContent(listHTML, '#001133', () => {
-                setTimeout(() => {
-                    textElement.querySelector('.all-sponsors-container').classList.add('visible');
-                    setTimeout(() => backAudio.play(), 2000);
-                }, 100);
+            return showContent(listHTML, '#001133').then(() => {
+                const container = contentElement.querySelector('.all-sponsors-container');
+                if (container) {
+                    setTimeout(() => {
+                        container.classList.add('visible');
+                        try {
+                            if (backAudio.readyState >= 2) {
+                                backAudio.currentTime = 0;
+                                backAudio.play().catch(e => console.log('Audio play failed:', e));
+                            }
+                        } catch (e) {
+                            console.log('Audio error:', e);
+                        }
+                    }, 100);
+                }
             });
         }
 
-        body.addEventListener('click', function startSequence(e) {
-            body.removeEventListener('click', startSequence);
-            textElement.classList.remove('visible');
+        async function startSequence() {
+            if (isSequenceActive) return;
+            isSequenceActive = true;
+            instructionElement.style.display = 'none';
+            backButton.style.display = 'none';
+            
+            try {
+                if (audio.readyState >= 2) {
+                    audio.currentTime = 0;
+                    await audio.play();
+                }
+            } catch (e) {
+                console.log('Audio play failed:', e);
+            }
 
+            await showTitle();
+            await delay(1500);
+            
+            for (let i = 0; i < 5; i++) {
+                await showSponsor(i);
+                await delay(i === 0 ? 2000 : 1500);
+            }
+            
+            await showAllSponsors();
+            backButton.style.display = 'block';
+            isSequenceActive = false;
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function resetToStart() {
+            if (sequenceTimeout) {
+                clearTimeout(sequenceTimeout);
+                sequenceTimeout = null;
+            }
+            
+            try {
+                audio.pause();
+                audio.currentTime = 0;
+                backAudio.pause();
+                backAudio.currentTime = 0;
+            } catch (e) {
+                console.log('Audio stop error:', e);
+            }
+            
+            contentElement.classList.remove('visible');
             setTimeout(() => {
-                audio.play();
-                showTitle();
-
-                setTimeout(() => showSponsor(0), 2000);
-                setTimeout(() => showSponsor(1), 2000 + 3000);
-                setTimeout(() => showSponsor(2), 2000 + 3000 + 2000);
-                setTimeout(() => showSponsor(3), 2000 + 3000 + 2000 + 2500);
-                setTimeout(() => showSponsor(4), 2000 + 3000 + 2000 + 2000 + 3000);
-                setTimeout(() => showAllSponsors(), 2000 + 3000 + 2000 + 2000 + 2000 + 3000);
+                body.style.backgroundColor = '#000';
+                contentElement.innerHTML = 'Нажми на экран, чтобы начать';
+                contentElement.classList.add('visible');
+                instructionElement.style.display = 'block';
+                backButton.style.display = 'none';
+                isSequenceActive = false;
+                currentStep = 0;
             }, 300);
+        }
+
+        body.addEventListener('click', function initialClick(e) {
+            if (e.target.closest('#backButton')) return;
+            if (!isSequenceActive) {
+                startSequence();
+            }
         });
 
-        window.onload = () => {
-            setTimeout(() => textElement.classList.add('visible'), 300);
-        };
+        backButton.addEventListener('click', resetToStart);
 
-        body.addEventListener('touchstart', function(e) {
-            if (body.onclick) {
-                e.preventDefault();
-                body.click();
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                contentElement.classList.add('visible');
+                instructionElement.style.display = 'block';
+            }, 500);
+            
+            try {
+                audio.load();
+                backAudio.load();
+            } catch (e) {
+                console.log('Audio load error:', e);
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                resetToStart();
+            }
+            if (e.key === ' ' || e.key === 'Enter') {
+                if (!isSequenceActive) {
+                    startSequence();
+                }
+            }
+        });
+
+        document.addEventListener('touchstart', function(e) {
+            if (e.target.closest('#backButton')) return;
+            e.preventDefault();
+        }, { passive: false });
+
+        window.addEventListener('resize', () => {
+            if (window.pJSDom && window.pJSDom[0]) {
+                window.pJSDom[0].pJS.fn.vendors.resize();
             }
         });
     </script>
