@@ -2,8 +2,12 @@
 <html lang="ru" class="dark">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>wixland(C) 1.6-pre</title>
+<meta name="description" content="Wixland - игровая платформа с классическими играми без регистрации">
+<meta name="keywords" content="игры, snake, 2048, flappy bird, бесплатные игры">
+<title>wixland(C) 1.7</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -11,11 +15,7 @@ body{
 font-family:Inter,Segoe UI,sans-serif;
 min-height:100vh;
 color:white;
-background-image:url("themes/cyberpunk1.gif");
-background-size:cover;
-background-position:center;
-background-repeat:no-repeat;
-transition:background-image .4s ease;
+background:#000 url("themes/cyberpunk1.gif") center/cover no-repeat;
 overflow-x:hidden;
 }
 .glass{
@@ -28,7 +28,7 @@ border-radius:1rem;
 padding:14px 36px;
 border-radius:999px;
 font-weight:800;
-transition:.2s;
+transition:transform .2s,box-shadow .2s;
 cursor:pointer;
 }
 .btn-primary{
@@ -45,8 +45,9 @@ transform:translateY(-2px) scale(1.05);
 box-shadow:0 0 30px #ff00ff;
 }
 .hover-card{
-transition:.3s;
-transform-style: preserve-3d;
+transition:transform .3s,box-shadow .3s;
+transform-style:preserve-3d;
+will-change:transform;
 }
 .hover-card:hover{
 transform:translateY(-8px) scale(1.05);
@@ -56,7 +57,7 @@ box-shadow:0 0 40px #ff00ff;
 width:2rem;
 height:2rem;
 filter:grayscale(100%);
-transition:.2s;
+transition:filter .2s,transform .2s;
 position:relative;
 }
 .footer-icon:hover{
@@ -77,22 +78,13 @@ white-space:nowrap;
 color:white;
 pointer-events:none;
 }
-
 .text-neon{
 color:#ff00ff;
-text-shadow:
-0 0 5px #ff00ff,
-0 0 10px #ff00ff,
-0 0 20px #ff00ff,
-0 0 30px #00ffff;
-transition:.3s;
+text-shadow:0 0 5px #ff00ff,0 0 10px #ff00ff,0 0 20px #ff00ff,0 0 30px #00ffff;
+transition:text-shadow .3s;
 }
 .text-neon:hover{
-text-shadow:
-0 0 10px #ff00ff,
-0 0 20px #ff00ff,
-0 0 30px #ff00ff,
-0 0 40px #00ffff;
+text-shadow:0 0 10px #ff00ff,0 0 20px #ff00ff,0 0 30px #ff00ff,0 0 40px #00ffff;
 }
 #redirect-overlay{
 position:fixed;
@@ -142,9 +134,80 @@ border-radius:12px;
 box-shadow:0 0 12px #ff00ff;
 transition:width .1s linear;
 }
+#about-page{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.95);
+z-index:10000;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+#about-page.hidden{
+display:none;
+}
+#games{
+scroll-margin-top:80px;
+}
+#page-loader{
+position:fixed;
+inset:0;
+background:#000;
+z-index:10001;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:opacity .5s ease;
+}
+#page-loader.hidden{
+opacity:0;
+pointer-events:none;
+}
+.btn-disabled{
+opacity:0.6;
+cursor:not-allowed;
+background:linear-gradient(90deg,#555,#888);
+}
+.btn-disabled:hover{
+transform:none;
+box-shadow:none;
+}
+.coming-soon-badge{
+position:absolute;
+top:-8px;
+right:-8px;
+background:linear-gradient(90deg,#ff9900,#ffcc00);
+color:#000;
+font-size:0.7rem;
+font-weight:bold;
+padding:3px 8px;
+border-radius:12px;
+z-index:10;
+}
+@media (max-width:640px){
+.text-4xl{font-size:2.5rem;}
+.text-7xl{font-size:3.5rem;}
+.btn{padding:12px 24px;}
+#redirect-box{padding:24px;margin:16px;}
+#redirect-box h2{font-size:1.8rem;}
+.hover-card:hover{transform:none;box-shadow:none;}
+}
+@media (max-width:340px){
+body{overflow-x:hidden;}
+.container{width:100%;padding:0 10px;}
+}
 </style>
 </head>
 <body class="flex flex-col">
+<div id="page-loader">
+<div class="text-center">
+<div class="text-5xl mb-4 animate-pulse">🎮</div>
+<div class="text-xl font-bold">Загрузка Wixland...</div>
+<div class="w-48 h-1 bg-gray-800 rounded-full mt-4 overflow-hidden mx-auto">
+<div class="h-full bg-gradient-to-r from-purple-500 to-cyan-500 animate-pulse" style="animation-duration:1.5s"></div>
+</div>
+</div>
+</div>
 
 <header class="glass sticky top-0 z-50">
 <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -157,9 +220,7 @@ transition:width .1s linear;
 </header>
 
 <section class="flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden">
-<h2 class="text-4xl md:text-7xl font-black mb-6 text-neon">
-Играй <span>всегда</span>
-</h2>
+<h2 class="text-4xl md:text-7xl font-black mb-6 text-neon">Играй <span>всегда</span></h2>
 <p class="text-gray-300 mb-10 max-w-xl mx-auto">Без регистрации. Без входа. Wixland содержит все классические игры.</p>
 <div class="flex flex-col sm:flex-row gap-6 justify-center">
 <a href="#games" class="btn btn-primary">Начать играть</a>
@@ -170,106 +231,281 @@ transition:width .1s linear;
 <section id="games" class="max-w-7xl mx-auto px-6 py-16">
 <h3 class="text-3xl font-bold text-center mb-12">Выбери игру</h3>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
 <div class="glass p-6 hover-card text-center">
 <div class="text-5xl mb-2">🐍</div>
 <h4 class="text-2xl font-bold mb-2">Snake</h4>
 <p class="text-gray-300 mb-4">Классическая змейка! Управляй змейкой и ешь фрукты, избегая столкновений.</p>
-<button class="btn btn-primary w-full play" data-link="Snake.html">Играть</button>
+<button class="btn btn-primary w-full play" data-link="https://gititgit1113.github.io/wixland/Snake.html" data-game="Snake">Играть</button>
 </div>
 
 <div class="glass p-6 hover-card text-center">
 <div class="text-5xl mb-2">🧠</div>
 <h4 class="text-2xl font-bold mb-2">2048</h4>
 <p class="text-gray-300 mb-4">Складывай плитки одинаковых чисел, чтобы достичь 2048!</p>
-<button class="btn btn-primary w-full play" data-link="2048.html">Играть</button>
+<button class="btn btn-primary w-full play" data-link="https://gititgit1113.github.io/wixland/2048.html" data-game="2048">Играть</button>
 </div>
 
 <div class="glass p-6 hover-card text-center">
 <div class="text-5xl mb-2">🐦</div>
 <h4 class="text-2xl font-bold mb-2">Floppy Bird</h4>
 <p class="text-gray-300 mb-4">Классическая Flappy Bird! Кликни, чтобы птица летела между трубами.</p>
-<button class="btn btn-primary w-full play" data-link="https://gititgit1113.github.io/wixland/flop/index.html">Играть</button>
+<button class="btn btn-primary w-full play" data-link="https://gititgit1113.github.io/wixland/flop/index.html" data-game="Floppy Bird">Играть</button>
 </div>
 
+<div class="glass p-6 hover-card text-center relative">
+<div class="text-5xl mb-2">✏️</div>
+<div class="coming-soon-badge">СКОРО</div>
+<h4 class="text-2xl font-bold mb-2">Tic Tac Toe</h4>
+<p class="text-gray-300 mb-4">Крестики-нолики! Играй против компьютера или друга. Скоро будет доступно!</p>
+<button class="btn btn-primary btn-disabled w-full" disabled>Скоро</button>
 </div>
-</section>
-
-<section class="max-w-7xl mx-auto px-6 py-16">
-<h3 class="text-3xl font-bold text-center mb-12">Проекты</h3>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
-<div class="glass p-6 hover-card text-center">
-<div class="text-4xl mb-2">🍓</div>
-<h4 class="text-2xl font-bold mb-2">BerryOS</h4>
-<p class="text-gray-300 mb-4">Операционная система созданная canvayys.</p>
-<a href="http://berrykernel.rf.gd" target="_blank" rel="noopener noreferrer" class="btn btn-primary w-full">Открыть</a>
-</div>
-
-<div class="glass p-6 hover-card text-center">
-<div class="text-4xl mb-2">🛠️</div>
-<h4 class="text-2xl font-bold mb-2">CraftingTable</h4>
-<p class="text-gray-300 mb-4">Java эмулятор Minecraft в браузере. Только для ПК с поддержкой JS.</p>
-<a href="https://craftingtable.free.nf/" target="_blank" rel="noopener noreferrer" class="btn btn-primary w-full">Играть</a>
-</div>
-
 </div>
 </section>
 
-<footer class="py-10 text-center text-gray-300 glass flex justify-center gap-2">
+<footer class="py-10 text-center text-gray-300 glass flex justify-center gap-2 items-center">
 <a href="https://t.me/wixlander" target="_blank" rel="noopener noreferrer">
-<img src="TgWixland.png" class="footer-icon" data-tooltip="Телеграм">
+<img src="TgWixland.png" alt="Telegram канал Wixland" class="footer-icon" data-tooltip="Telegram">
 </a>
-wixland team • 2026 • Все права защищены.
+<span class="mx-2">wixland team • <span id="current-year">2025</span> • Все права защищены.</span>
 </footer>
 
 <div id="redirect-overlay">
 <div id="redirect-box">
-<h2>Перенаправление...</h2>
+<h2 id="redirect-title">Перенаправление...</h2>
+<p id="redirect-subtitle" class="text-gray-300 mb-4">Загрузка игры</p>
 <div id="progress-bar-container">
 <div id="progress-bar"></div>
+</div>
+<div class="mt-6 flex gap-4 justify-center">
+<button id="cancel-redirect" class="btn btn-outline">Отмена</button>
+<button id="retry-game" class="btn btn-primary hidden">Попробовать снова</button>
 </div>
 </div>
 </div>
 
-<div id="about-page" class="hidden fixed inset-0 bg-black/95 z-[1500] flex items-center justify-center">
+<div id="about-page" class="hidden">
 <div class="glass text-center max-w-xl p-10 relative">
 <button id="close-about" class="absolute top-4 right-4 text-2xl">&times;</button>
 <h2 class="text-4xl font-black mb-6">О нас</h2>
-<p class="text-gray-300">wixland — платформа мгновенных игр без регистрации.</p>
-<p class="text-gray-300">В этом проекте 2 владельца данного веб-сайта:</p>
-<p class="text-gray-300">canvayys - Создатель и разработчик сайта</p>
-<p class="text-gray-300">wixyys - Владелец сайта</p>
+<p class="text-gray-300 mb-4">wixland — платформа мгновенных игр без регистрации.</p>
+<p class="text-gray-300 mb-2">В этом проекте 2 владельца данного веб-сайта:</p>
+<p class="text-gray-300 mb-1">canvayys - Создатель и разработчик сайта</p>
+<p class="text-gray-300 mb-6">wixyys - Владелец сайта</p>
+<p class="text-gray-400 text-sm">Версия: 1.6-pre • Последнее обновление: 2025</p>
+</div>
+</div>
+
+<div id="external-warning" class="hidden fixed inset-0 bg-black/90 z-10000 flex items-center justify-center">
+<div class="glass text-center max-w-md p-8">
+<h2 class="text-2xl font-bold mb-4">Внимание!</h2>
+<p class="text-gray-300 mb-6">Вы покидаете Wixland и переходите на внешний сайт:</p>
+<p id="external-url" class="text-neon mb-6 font-mono text-sm p-2 bg-black/30 rounded"></p>
+<p class="text-gray-400 text-sm mb-6">Wixland не несет ответственности за содержание внешних сайтов</p>
+<div class="flex gap-4 justify-center">
+<button id="confirm-external" class="btn btn-primary">Перейти</button>
+<button id="cancel-external" class="btn btn-outline">Отмена</button>
+</div>
 </div>
 </div>
 
 <script>
-const redirectOverlay=document.getElementById("redirect-overlay");
-const progressBar=document.getElementById("progress-bar");
-document.querySelectorAll(".play").forEach(btn=>{
-btn.onclick=()=>{
-redirectOverlay.classList.add("active");
-progressBar.style.width='0%';
-const duration=1000+Math.random()*2000;
-const start=performance.now();
-function animate(time){
-const elapsed=time-start;
-const progress=Math.min(elapsed/duration,1)*100;
-progressBar.style.width=progress+'%';
-if(elapsed<duration)requestAnimationFrame(animate);
-}
-requestAnimationFrame(animate);
-setTimeout(()=>location.href=btn.dataset.link,duration+50);
+window.onerror = function(msg, url, line) {
+    console.error('Ошибка:', msg, 'в', url, 'строка', line);
 };
-});
-document.getElementById("random-game").onclick=()=>{
-const g=[...document.querySelectorAll(".play")];
-g[Math.floor(Math.random()*g.length)].click();
-};
-document.getElementById("sponsors-btn").onclick=()=>location.href="sponsors.html";
-document.getElementById("about-btn").onclick=()=>document.getElementById("about-page").classList.remove("hidden");
-document.getElementById("close-about").onclick=()=>document.getElementById("about-page").classList.add("hidden");
-</script>
 
+let animationId = null;
+let currentRedirectUrl = '';
+let currentGameName = '';
+
+const games = [
+    { name: 'Snake', path: 'https://gititgit1113.github.io/wixland/Snake.html', fallback: null },
+    { name: '2048', path: 'https://gititgit1113.github.io/wixland/2048.html', fallback: null },
+    { name: 'Floppy Bird', path: 'https://gititgit1113.github.io/wixland/flop/index.html', fallback: null }
+];
+
+function checkGameAvailability(url) {
+    return new Promise((resolve) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('HEAD', url);
+        xhr.timeout = 3000;
+        xhr.onload = () => resolve(true);
+        xhr.onerror = () => resolve(false);
+        xhr.ontimeout = () => resolve(false);
+        xhr.send();
+    });
+}
+
+async function startGameRedirect(gameName, gamePath) {
+    currentGameName = gameName;
+    document.getElementById('redirect-title').textContent = `Загрузка ${gameName}...`;
+    document.getElementById('redirect-subtitle').textContent = 'Проверка доступности...';
+    redirectOverlay.classList.add("active");
+    progressBar.style.width = '0%';
+    document.getElementById('retry-game').classList.add('hidden');
+
+    try {
+        const isAvailable = await checkGameAvailability(gamePath);
+        
+        if (!isAvailable) {
+            throw new Error('Game not available');
+        }
+
+        currentRedirectUrl = gamePath;
+
+        const duration = 1500;
+        const start = performance.now();
+
+        function animate(time) {
+            const elapsed = time - start;
+            const progress = Math.min(elapsed / duration, 1) * 100;
+            progressBar.style.width = progress + '%';
+            
+            if (elapsed < duration) {
+                animationId = requestAnimationFrame(animate);
+            } else {
+                animationId = null;
+                window.location.href = currentRedirectUrl;
+                setTimeout(() => {
+                    redirectOverlay.classList.remove('active');
+                    progressBar.style.width = '0%';
+                }, 100);
+            }
+        }
+
+        animationId = requestAnimationFrame(animate);
+
+    } catch (error) {
+        console.error('Ошибка загрузки игры:', error);
+        document.getElementById('redirect-subtitle').textContent = 'Ошибка загрузки игры';
+        document.getElementById('retry-game').classList.remove('hidden');
+        document.getElementById('retry-game').onclick = () => startGameRedirect(gameName, gamePath);
+    }
+}
+
+function startCustomRedirect(url, title = 'Перенаправление...') {
+    if (animationId) cancelAnimationFrame(animationId);
+    
+    currentRedirectUrl = url;
+    document.getElementById('redirect-title').textContent = title;
+    document.getElementById('redirect-subtitle').textContent = 'Подготовка...';
+    document.getElementById('retry-game').classList.add('hidden');
+    redirectOverlay.classList.add("active");
+    progressBar.style.width = '0%';
+
+    const duration = 1000 + Math.random() * 2000;
+    const start = performance.now();
+
+    function animate(time) {
+        const elapsed = time - start;
+        const progress = Math.min(elapsed / duration, 1) * 100;
+        progressBar.style.width = progress + '%';
+        
+        if (elapsed < duration) {
+            animationId = requestAnimationFrame(animate);
+        } else {
+            animationId = null;
+            window.location.href = url;
+        }
+    }
+
+    animationId = requestAnimationFrame(animate);
+}
+
+const redirectOverlay = document.getElementById("redirect-overlay");
+const progressBar = document.getElementById("progress-bar");
+
+document.querySelectorAll(".play").forEach(btn => {
+    btn.onclick = () => {
+        const gameName = btn.dataset.game;
+        const gamePath = btn.dataset.link;
+        if (gameName && gamePath) {
+            startGameRedirect(gameName, gamePath);
+        }
+    };
+});
+
+document.querySelectorAll(".external-link").forEach(link => {
+    link.onclick = (e) => {
+        e.preventDefault();
+        const url = link.href;
+        const hostname = new URL(url).hostname;
+        document.getElementById('external-url').textContent = hostname;
+        document.getElementById('external-warning').classList.remove('hidden');
+        currentRedirectUrl = url;
+    };
+});
+
+document.getElementById("random-game").onclick = () => {
+    if (games.length === 0) return;
+    const randomGame = games[Math.floor(Math.random() * games.length)];
+    startGameRedirect(randomGame.name, randomGame.path);
+};
+
+document.getElementById("sponsors-btn").onclick = () => {
+    startCustomRedirect("sponsors.html", "Загрузка спонсоров...");
+};
+
+document.getElementById("about-btn").onclick = () => {
+    document.getElementById("about-page").classList.remove("hidden");
+};
+
+document.getElementById("close-about").onclick = () => {
+    document.getElementById("about-page").classList.add("hidden");
+};
+
+document.getElementById("cancel-redirect").onclick = () => {
+    redirectOverlay.classList.remove("active");
+    progressBar.style.width = '0%';
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+};
+
+document.getElementById("confirm-external").onclick = () => {
+    document.getElementById('external-warning').classList.add('hidden');
+    if (currentRedirectUrl) {
+        window.open(currentRedirectUrl, '_blank', 'noopener,noreferrer');
+        currentRedirectUrl = '';
+    }
+};
+
+document.getElementById("cancel-external").onclick = () => {
+    document.getElementById('external-warning').classList.add('hidden');
+    currentRedirectUrl = '';
+};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.getElementById("about-page").classList.add("hidden");
+        document.getElementById('external-warning').classList.add('hidden');
+        if (!redirectOverlay.classList.contains('active')) {
+            redirectOverlay.classList.remove("active");
+            progressBar.style.width = '0%';
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+    }
+});
+
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('page-loader').classList.add('hidden');
+        setTimeout(() => {
+            document.getElementById('page-loader').style.display = 'none';
+        }, 500);
+    }, 800);
+});
+
+document.getElementById('current-year').textContent = new Date().getFullYear();
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(err => {
+        console.log('SW регистрация не удалась:', err);
+    });
+}
+</script>
 </body>
 </html>
