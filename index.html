@@ -4,214 +4,316 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Wixland - игровая платформа с классическими играми без регистрации">
+<meta name="description" content="Wix's Space - игровая платформа с классическими играми без регистрации">
 <meta name="keywords" content="игры, snake, 2048, flappy bird, бесплатные игры">
-<title>wixland(C) 1.7</title>
+<title>wix's space · 1.7 beta (C)</title>
 <link rel="icon" href="favicon.ico" type="image/x-icon">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&display=swap">
 <style>
-body{
-font-family:Inter,Segoe UI,sans-serif;
-min-height:100vh;
-color:white;
-background:#000 url("themes/cyberpunk1.gif") center/cover no-repeat;
-overflow-x:hidden;
+:root {
+  --glass-base: #bbbbbc;
+  --glass-highlight: #fff;
+  --glass-shadow: #000;
+  --glass-reflex-opacity-light: 1;
+  --glass-reflex-opacity-dark: 1;
+  --glass-saturation: 150%;
+  font-family: "DM Sans", "Inter", "Segoe UI", sans-serif;
 }
-.glass{
-backdrop-filter:blur(18px);
-background:rgba(0,0,0,.45);
-border:1px solid rgba(255,255,255,.12);
-border-radius:1rem;
+* {
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.btn{
-padding:14px 36px;
-border-radius:999px;
-font-weight:800;
-transition:transform .2s,box-shadow .2s;
-cursor:pointer;
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: white;
+  background: #000 url("themes/cyberpunk1.gif") center/cover no-repeat fixed;
+  overflow-x: hidden;
+  font-family: "DM Sans", "Inter", "Segoe UI", sans-serif;
 }
-.btn-primary{
-background:linear-gradient(90deg,#ff00ff,#00ffff);
-color:white;
+.liquid-glass {
+  background-color: color-mix(in srgb, var(--glass-base) 12%, transparent);
+  backdrop-filter: blur(8px) url(#glass-blur) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(8px) saturate(var(--glass-saturation));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--glass-highlight) calc(var(--glass-reflex-opacity-light) * 10%), transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--glass-highlight) calc(var(--glass-reflex-opacity-light) * 90%), transparent),
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--glass-highlight) calc(var(--glass-reflex-opacity-light) * 80%), transparent),
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--glass-highlight) calc(var(--glass-reflex-opacity-light) * 60%), transparent),
+    inset -0.3px -1px 4px 0px color-mix(in srgb, var(--glass-shadow) calc(var(--glass-reflex-opacity-dark) * 12%), transparent),
+    inset -1.5px 2.5px 0px -2px color-mix(in srgb, var(--glass-shadow) calc(var(--glass-reflex-opacity-dark) * 20%), transparent),
+    0px 1px 5px 0px color-mix(in srgb, var(--glass-shadow) calc(var(--glass-reflex-opacity-dark) * 10%), transparent),
+    0px 6px 16px 0px color-mix(in srgb, var(--glass-shadow) calc(var(--glass-reflex-opacity-dark) * 8%), transparent);
+  border: none;
+  border-radius: 24px;
 }
-.btn-outline{
-border:2px solid #ff00ff;
-color:white;
-background:none;
+.btn {
+  padding: 14px 36px;
+  border-radius: 999px;
+  font-weight: 800;
+  transition: transform .2s, box-shadow .2s;
+  cursor: pointer;
+  appearance: none;
+  font-family: inherit;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transform: scale(1);
+  background-color: color-mix(in srgb, var(--glass-base) 12%, transparent);
+  backdrop-filter: blur(8px) url(#glass-blur) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(8px) saturate(var(--glass-saturation));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--glass-highlight) calc(var(--glass-reflex-opacity-light) * 10%), transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--glass-highlight) calc(var(--glass-reflex-opacity-light) * 90%), transparent),
+    inset -2px -2px 0px -2px color-mix(in srgb, var(--glass-highlight) calc(var(--glass-reflex-opacity-light) * 80%), transparent),
+    inset -3px -8px 1px -6px color-mix(in srgb, var(--glass-highlight) calc(var(--glass-reflex-opacity-light) * 60%), transparent);
+  border: none;
+  color: white;
 }
-.btn:hover{
-transform:translateY(-2px) scale(1.05);
-box-shadow:0 0 30px #ff00ff;
+.btn:hover { 
+  transform: translateY(-2px) scale(1.05); 
+  box-shadow: 0 0 20px rgba(255,255,255,0.3), inset 0 0 0 1px color-mix(in srgb, var(--glass-highlight) 30%, transparent);
 }
-.hover-card{
-transition:transform .3s,box-shadow .3s;
-transform-style:preserve-3d;
-will-change:transform;
+.btn-primary {
+  background: color-mix(in srgb, var(--glass-base) 20%, transparent);
+  backdrop-filter: blur(8px) url(#glass-blur) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(8px) saturate(var(--glass-saturation));
 }
-.hover-card:hover{
-transform:translateY(-8px) scale(1.05);
-box-shadow:0 0 40px #ff00ff;
+.btn-outline {
+  border: 2px solid rgba(255,255,255,0.3);
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
 }
-.footer-icon{
-width:2rem;
-height:2rem;
-filter:grayscale(100%);
-transition:filter .2s,transform .2s;
-position:relative;
+.btn-outline:hover {
+  border-color: rgba(255,255,255,0.6);
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
 }
-.footer-icon:hover{
-filter:none;
-transform:scale(1.1);
+.btn.icon-only { 
+  padding: 0; 
+  width: 52px; 
+  height: 52px; 
+  justify-content: center; 
+  border-radius: 50%; 
 }
-.footer-icon[data-tooltip]:hover::after{
-content:attr(data-tooltip);
-position:absolute;
-bottom:125%;
-left:50%;
-transform:translateX(-50%);
-background:rgba(0,0,0,.7);
-padding:4px 8px;
-border-radius:6px;
-font-size:.75rem;
-white-space:nowrap;
-color:white;
-pointer-events:none;
+.btn:active { transform: scale(0.95); }
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: color-mix(in srgb, var(--glass-base) 8%, transparent);
 }
-.text-neon{
-color:#ff00ff;
-text-shadow:0 0 5px #ff00ff,0 0 10px #ff00ff,0 0 20px #ff00ff,0 0 30px #00ffff;
-transition:text-shadow .3s;
+.btn-disabled:hover {
+  transform: none;
+  box-shadow: none;
 }
-.text-neon:hover{
-text-shadow:0 0 10px #ff00ff,0 0 20px #ff00ff,0 0 30px #ff00ff,0 0 40px #00ffff;
+.hover-card {
+  transition: transform .3s, box-shadow .3s;
+  transform-style: preserve-3d;
+  will-change: transform;
+  border-radius: 24px;
 }
-#redirect-overlay{
-position:fixed;
-inset:0;
-display:flex;
-justify-content:center;
-align-items:center;
-background:rgba(0,0,0,.85);
-backdrop-filter:blur(6px);
-z-index:9999;
-opacity:0;
-pointer-events:none;
-transition:opacity .3s ease;
+.hover-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 0 30px rgba(255,255,255,0.2);
 }
-#redirect-overlay.active{
-opacity:1;
-pointer-events:auto;
+.footer-icon {
+  width: 2rem;
+  height: 2rem;
+  filter: grayscale(100%) brightness(1.5);
+  transition: filter .2s, transform .2s;
+  position: relative;
+  border-radius: 50%;
 }
-#redirect-box{
-max-width:450px;
-padding:40px;
-text-align:center;
-background:rgba(0,0,0,.55);
-backdrop-filter:blur(12px);
-border-radius:24px;
-border:1px solid rgba(255,255,255,.15);
-box-shadow:0 0 40px rgba(255,255,255,.1);
+.footer-icon:hover {
+  filter: none;
+  transform: scale(1.1);
 }
-#redirect-box h2{
-font-size:2.2rem;
-margin-bottom:24px;
-color:#fff;
+.footer-icon[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,.7);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: .75rem;
+  white-space: nowrap;
+  color: white;
+  pointer-events: none;
 }
-#progress-bar-container{
-width:100%;
-height:18px;
-background:rgba(255,255,255,.15);
-border-radius:12px;
-overflow:hidden;
-margin-top:16px;
+.text-gradient {
+  background: linear-gradient(135deg, #fff, #ccc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-#progress-bar{
-width:0%;
-height:100%;
-background:linear-gradient(90deg,#ff00ff,#00ffff);
-border-radius:12px;
-box-shadow:0 0 12px #ff00ff;
-transition:width .1s linear;
+#redirect-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,.85);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease;
 }
-#about-page{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.95);
-z-index:10000;
-display:flex;
-align-items:center;
-justify-content:center;
+#redirect-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
-#about-page.hidden{
-display:none;
+#redirect-box {
+  max-width: 450px;
+  padding: 40px;
+  text-align: center;
+  background-color: color-mix(in srgb, var(--glass-base) 12%, transparent);
+  backdrop-filter: blur(12px) url(#glass-blur) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(12px) saturate(var(--glass-saturation));
+  border-radius: 24px;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--glass-highlight) 10%, transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--glass-highlight) 90%, transparent),
+    0px 6px 16px 0px color-mix(in srgb, var(--glass-shadow) 8%, transparent);
 }
-#games{
-scroll-margin-top:80px;
+#redirect-box h2 {
+  font-size: 2.2rem;
+  margin-bottom: 24px;
+  color: #fff;
 }
-#page-loader{
-position:fixed;
-inset:0;
-background:#000;
-z-index:10001;
-display:flex;
-align-items:center;
-justify-content:center;
-transition:opacity .5s ease;
+#progress-bar-container {
+  width: 100%;
+  height: 18px;
+  background: rgba(255,255,255,.1);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 16px;
 }
-#page-loader.hidden{
-opacity:0;
-pointer-events:none;
+#progress-bar {
+  width: 0%;
+  height: 100%;
+  background: rgba(255,255,255,0.3);
+  border-radius: 12px;
+  transition: width .1s linear;
 }
-.btn-disabled{
-opacity:0.6;
-cursor:not-allowed;
-background:linear-gradient(90deg,#555,#888);
+#about-page {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.95);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.btn-disabled:hover{
-transform:none;
-box-shadow:none;
+#about-page.hidden {
+  display: none;
 }
-.coming-soon-badge{
-position:absolute;
-top:-8px;
-right:-8px;
-background:linear-gradient(90deg,#ff9900,#ffcc00);
-color:#000;
-font-size:0.7rem;
-font-weight:bold;
-padding:3px 8px;
-border-radius:12px;
-z-index:10;
+#games {
+  scroll-margin-top: 80px;
+}
+#page-loader {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .5s ease;
+}
+#page-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.coming-soon-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 12px;
+  z-index: 10;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+#external-warning {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.9);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#external-warning.hidden {
+  display: none;
+}
+.game-card {
+  background-color: color-mix(in srgb, var(--glass-base) 10%, transparent);
+  backdrop-filter: blur(8px) url(#glass-blur) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(8px) saturate(var(--glass-saturation));
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--glass-highlight) 8%, transparent),
+    inset 1.8px 3px 0px -2px color-mix(in srgb, var(--glass-highlight) 70%, transparent);
+}
+.game-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+.game-description {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 @media (max-width:640px){
-.text-4xl{font-size:2.5rem;}
-.text-7xl{font-size:3.5rem;}
-.btn{padding:12px 24px;}
-#redirect-box{padding:24px;margin:16px;}
-#redirect-box h2{font-size:1.8rem;}
-.hover-card:hover{transform:none;box-shadow:none;}
+  .text-4xl{font-size:2.5rem;}
+  .text-7xl{font-size:3.5rem;}
+  .btn{padding:12px 24px;}
+  #redirect-box{padding:24px;margin:16px;}
+  #redirect-box h2{font-size:1.8rem;}
+  .hover-card:hover{transform:none;box-shadow:none;}
 }
 @media (max-width:340px){
-body{overflow-x:hidden;}
-.container{width:100%;padding:0 10px;}
+  body{overflow-x:hidden;}
+  .container{width:100%;padding:0 10px;}
 }
 </style>
 </head>
-<body class="flex flex-col">
+<body>
+<svg style="position: absolute; width: 0; height: 0; pointer-events: none;">
+  <filter id="glass-blur" x="0" y="0" width="100%" height="100%" filterUnits="objectBoundingBox">
+    <feTurbulence type="fractalNoise" baseFrequency="0.003 0.007" numOctaves="1" result="turbulence" />
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="20" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+</svg>
+
 <div id="page-loader">
 <div class="text-center">
 <div class="text-5xl mb-4 animate-pulse">🎮</div>
-<div class="text-xl font-bold">Загрузка Wixland...</div>
+<div class="text-xl font-bold" style="color: white;">Загрузка Wix's Space...</div>
 <div class="w-48 h-1 bg-gray-800 rounded-full mt-4 overflow-hidden mx-auto">
-<div class="h-full bg-gradient-to-r from-purple-500 to-cyan-500 animate-pulse" style="animation-duration:1.5s"></div>
+<div class="h-full bg-white/30 rounded-full animate-pulse" style="animation-duration:1.5s"></div>
 </div>
 </div>
 </div>
 
-<header class="glass sticky top-0 z-50">
+<header class="sticky top-0 z-50" style="background-color: color-mix(in srgb, var(--glass-base) 8%, transparent); backdrop-filter: blur(8px) url(#glass-blur) saturate(var(--glass-saturation)); -webkit-backdrop-filter: blur(8px) saturate(var(--glass-saturation)); border-bottom: 1px solid rgba(255,255,255,0.1);">
 <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-<h1 class="text-3xl font-black">wixland</h1>
+<h1 class="text-3xl font-black text-white">wix's space</h1>
 <div class="flex gap-5 items-center">
 <button id="sponsors-btn" class="btn btn-outline">Спонсоры</button>
 <button id="about-btn" class="btn btn-outline">О нас</button>
@@ -219,9 +321,9 @@ body{overflow-x:hidden;}
 </nav>
 </header>
 
-<section class="flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden">
-<h2 class="text-4xl md:text-7xl font-black mb-6 text-neon">Играй <span>всегда</span></h2>
-<p class="text-gray-300 mb-10 max-w-xl mx-auto">Без регистрации. Без входа. Wixland содержит все классические игры.</p>
+<section class="flex-1 flex flex-col items-center justify-center px-6 text-center relative overflow-hidden" style="padding-top: 60px; padding-bottom: 60px;">
+<h2 class="text-4xl md:text-7xl font-black mb-6 text-gradient">Играй всегда</h2>
+<p class="text-white/70 mb-10 max-w-xl mx-auto">Без регистрации. Без входа. Wix's Space содержит все классические игры.</p>
 <div class="flex flex-col sm:flex-row gap-6 justify-center">
 <a href="#games" class="btn btn-primary">Начать играть</a>
 <button id="random-game" class="btn btn-outline">Случайная игра</button>
@@ -229,50 +331,47 @@ body{overflow-x:hidden;}
 </section>
 
 <section id="games" class="max-w-7xl mx-auto px-6 py-16">
-<h3 class="text-3xl font-bold text-center mb-12">Выбери игру</h3>
+<h3 class="text-3xl font-bold text-center mb-12 text-white/90">Выбери игру</h3>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-<div class="glass p-6 hover-card text-center">
+<div class="game-card hover-card">
 <div class="text-5xl mb-2">🐍</div>
-<h4 class="text-2xl font-bold mb-2">Snake</h4>
-<p class="text-gray-300 mb-4">Классическая змейка! Управляй змейкой и ешь фрукты, избегая столкновений.</p>
+<h4 class="game-title">Snake</h4>
+<p class="game-description">Классическая змейка! Управляй змейкой и ешь фрукты, избегая столкновений.</p>
 <button class="btn btn-primary w-full play" data-link="https://gititgit1113.github.io/wixland/Snake.html" data-game="Snake">Играть</button>
 </div>
-
-<div class="glass p-6 hover-card text-center">
+<div class="game-card hover-card">
 <div class="text-5xl mb-2">🧠</div>
-<h4 class="text-2xl font-bold mb-2">2048</h4>
-<p class="text-gray-300 mb-4">Складывай плитки одинаковых чисел, чтобы достичь 2048!</p>
+<h4 class="game-title">2048</h4>
+<p class="game-description">Складывай плитки одинаковых чисел, чтобы достичь 2048!</p>
 <button class="btn btn-primary w-full play" data-link="https://gititgit1113.github.io/wixland/2048.html" data-game="2048">Играть</button>
 </div>
-
-<div class="glass p-6 hover-card text-center">
+<div class="game-card hover-card">
 <div class="text-5xl mb-2">🐦</div>
-<h4 class="text-2xl font-bold mb-2">Floppy Bird</h4>
-<p class="text-gray-300 mb-4">Классическая Flappy Bird! Кликни, чтобы птица летела между трубами.</p>
+<h4 class="game-title">Floppy Bird</h4>
+<p class="game-description">Классическая Flappy Bird! Кликни, чтобы птица летела между трубами.</p>
 <button class="btn btn-primary w-full play" data-link="https://gititgit1113.github.io/wixland/flop/index.html" data-game="Floppy Bird">Играть</button>
 </div>
-
-<div class="glass p-6 hover-card text-center relative">
+<div class="game-card hover-card relative">
 <div class="text-5xl mb-2">✏️</div>
 <div class="coming-soon-badge">СКОРО</div>
-<h4 class="text-2xl font-bold mb-2">Tic Tac Toe</h4>
-<p class="text-gray-300 mb-4">Крестики-нолики! Играй против компьютера или друга. Скоро будет доступно!</p>
-<button class="btn btn-primary btn-disabled w-full" disabled>Скоро</button>
+<h4 class="game-title">Tic Tac Toe</h4>
+<p class="game-description">Крестики-нолики! Играй против компьютера или друга. Скоро будет доступно!</p>
+<button class="btn btn-disabled w-full" disabled>Скоро</button>
 </div>
 </div>
 </section>
 
-<footer class="py-10 text-center text-gray-300 glass flex justify-center gap-2 items-center">
+<footer class="py-10 text-center flex justify-center gap-2 items-center" style="background-color: color-mix(in srgb, var(--glass-base) 6%, transparent); backdrop-filter: blur(8px) url(#glass-blur) saturate(var(--glass-saturation)); -webkit-backdrop-filter: blur(8px) saturate(var(--glass-saturation)); border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px;">
 <a href="https://t.me/wixlander" target="_blank" rel="noopener noreferrer">
-<img src="TgWixland.png" alt="Telegram канал Wixland" class="footer-icon" data-tooltip="Telegram">
+<img src="TgWixland.png" alt="Telegram канал Wix's Space" class="footer-icon" data-tooltip="Telegram">
 </a>
-<span class="mx-2">wixland team • <span id="current-year">2025</span> • Все права защищены.</span>
+<span class="mx-2 text-white/60">wix's space team • <span id="current-year">2026</span> • Все права защищены.</span>
 </footer>
 
 <div id="redirect-overlay">
 <div id="redirect-box">
 <h2 id="redirect-title">Перенаправление...</h2>
-<p id="redirect-subtitle" class="text-gray-300 mb-4">Загрузка игры</p>
+<p id="redirect-subtitle" class="text-white/70 mb-4">Загрузка игры</p>
 <div id="progress-bar-container">
 <div id="progress-bar"></div>
 </div>
@@ -284,23 +383,23 @@ body{overflow-x:hidden;}
 </div>
 
 <div id="about-page" class="hidden">
-<div class="glass text-center max-w-xl p-10 relative">
-<button id="close-about" class="absolute top-4 right-4 text-2xl">&times;</button>
-<h2 class="text-4xl font-black mb-6">О нас</h2>
-<p class="text-gray-300 mb-4">wixland — платформа мгновенных игр без регистрации.</p>
-<p class="text-gray-300 mb-2">В этом проекте 2 владельца данного веб-сайта:</p>
-<p class="text-gray-300 mb-1">canvayys - Создатель и разработчик сайта</p>
-<p class="text-gray-300 mb-6">wixyys - Владелец сайта</p>
-<p class="text-gray-400 text-sm">Версия: 1.6-pre • Последнее обновление: 2025</p>
+<div class="game-card text-center max-w-xl p-10 relative">
+<button id="close-about" class="absolute top-4 right-4 text-2xl text-white/60 hover:text-white/90">&times;</button>
+<h2 class="text-4xl font-black mb-6 text-white">О нас</h2>
+<p class="text-white/70 mb-4">wix's space — платформа мгновенных игр без регистрации.</p>
+<p class="text-white/70 mb-2">В этом проекте 2 владельца данного веб-сайта:</p>
+<p class="text-white/70 mb-1">canvayys - Создатель и разработчик сайта</p>
+<p class="text-white/70 mb-6">wixyys - Владелец сайта</p>
+<p class="text-white/50 text-sm">Версия: 1.7 beta • Последнее обновление: 2026</p>
 </div>
 </div>
 
-<div id="external-warning" class="hidden fixed inset-0 bg-black/90 z-10000 flex items-center justify-center">
-<div class="glass text-center max-w-md p-8">
-<h2 class="text-2xl font-bold mb-4">Внимание!</h2>
-<p class="text-gray-300 mb-6">Вы покидаете Wixland и переходите на внешний сайт:</p>
-<p id="external-url" class="text-neon mb-6 font-mono text-sm p-2 bg-black/30 rounded"></p>
-<p class="text-gray-400 text-sm mb-6">Wixland не несет ответственности за содержание внешних сайтов</p>
+<div id="external-warning" class="hidden">
+<div class="game-card text-center max-w-md p-8">
+<h2 class="text-2xl font-bold mb-4 text-white">Внимание!</h2>
+<p class="text-white/70 mb-6">Вы покидаете Wix's Space и переходите на внешний сайт:</p>
+<p id="external-url" class="text-white/90 mb-6 font-mono text-sm p-2 bg-black/20 rounded"></p>
+<p class="text-white/50 text-sm mb-6">Wix's Space не несет ответственности за содержание внешних сайтов</p>
 <div class="flex gap-4 justify-center">
 <button id="confirm-external" class="btn btn-primary">Перейти</button>
 <button id="cancel-external" class="btn btn-outline">Отмена</button>
@@ -309,202 +408,141 @@ body{overflow-x:hidden;}
 </div>
 
 <script>
-window.onerror = function(msg, url, line) {
-    console.error('Ошибка:', msg, 'в', url, 'строка', line);
-};
-
+window.onerror = function(msg, url, line) { console.error('Ошибка:', msg, 'в', url, 'строка', line); };
 let animationId = null;
 let currentRedirectUrl = '';
 let currentGameName = '';
-
 const games = [
-    { name: 'Snake', path: 'https://gititgit1113.github.io/wixland/Snake.html', fallback: null },
-    { name: '2048', path: 'https://gititgit1113.github.io/wixland/2048.html', fallback: null },
-    { name: 'Floppy Bird', path: 'https://gititgit1113.github.io/wixland/flop/index.html', fallback: null }
+  { name: 'Snake', path: 'https://gititgit1113.github.io/wixland/Snake.html' },
+  { name: '2048', path: 'https://gititgit1113.github.io/wixland/2048.html' },
+  { name: 'Floppy Bird', path: 'https://gititgit1113.github.io/wixland/flop/index.html' }
 ];
-
 function checkGameAvailability(url) {
-    return new Promise((resolve) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('HEAD', url);
-        xhr.timeout = 3000;
-        xhr.onload = () => resolve(true);
-        xhr.onerror = () => resolve(false);
-        xhr.ontimeout = () => resolve(false);
-        xhr.send();
-    });
+  return new Promise((resolve) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('HEAD', url);
+    xhr.timeout = 3000;
+    xhr.onload = () => resolve(true);
+    xhr.onerror = () => resolve(false);
+    xhr.ontimeout = () => resolve(false);
+    xhr.send();
+  });
 }
-
 async function startGameRedirect(gameName, gamePath) {
-    currentGameName = gameName;
-    document.getElementById('redirect-title').textContent = `Загрузка ${gameName}...`;
-    document.getElementById('redirect-subtitle').textContent = 'Проверка доступности...';
-    redirectOverlay.classList.add("active");
-    progressBar.style.width = '0%';
-    document.getElementById('retry-game').classList.add('hidden');
-
-    try {
-        const isAvailable = await checkGameAvailability(gamePath);
-        
-        if (!isAvailable) {
-            throw new Error('Game not available');
-        }
-
-        currentRedirectUrl = gamePath;
-
-        const duration = 1500;
-        const start = performance.now();
-
-        function animate(time) {
-            const elapsed = time - start;
-            const progress = Math.min(elapsed / duration, 1) * 100;
-            progressBar.style.width = progress + '%';
-            
-            if (elapsed < duration) {
-                animationId = requestAnimationFrame(animate);
-            } else {
-                animationId = null;
-                window.location.href = currentRedirectUrl;
-                setTimeout(() => {
-                    redirectOverlay.classList.remove('active');
-                    progressBar.style.width = '0%';
-                }, 100);
-            }
-        }
-
-        animationId = requestAnimationFrame(animate);
-
-    } catch (error) {
-        console.error('Ошибка загрузки игры:', error);
-        document.getElementById('redirect-subtitle').textContent = 'Ошибка загрузки игры';
-        document.getElementById('retry-game').classList.remove('hidden');
-        document.getElementById('retry-game').onclick = () => startGameRedirect(gameName, gamePath);
-    }
-}
-
-function startCustomRedirect(url, title = 'Перенаправление...') {
-    if (animationId) cancelAnimationFrame(animationId);
-    
-    currentRedirectUrl = url;
-    document.getElementById('redirect-title').textContent = title;
-    document.getElementById('redirect-subtitle').textContent = 'Подготовка...';
-    document.getElementById('retry-game').classList.add('hidden');
-    redirectOverlay.classList.add("active");
-    progressBar.style.width = '0%';
-
-    const duration = 1000 + Math.random() * 2000;
+  currentGameName = gameName;
+  document.getElementById('redirect-title').textContent = `Загрузка ${gameName}...`;
+  document.getElementById('redirect-subtitle').textContent = 'Проверка доступности...';
+  redirectOverlay.classList.add("active");
+  progressBar.style.width = '0%';
+  document.getElementById('retry-game').classList.add('hidden');
+  try {
+    const isAvailable = await checkGameAvailability(gamePath);
+    if (!isAvailable) throw new Error('Game not available');
+    currentRedirectUrl = gamePath;
+    const duration = 1500;
     const start = performance.now();
-
     function animate(time) {
-        const elapsed = time - start;
-        const progress = Math.min(elapsed / duration, 1) * 100;
-        progressBar.style.width = progress + '%';
-        
-        if (elapsed < duration) {
-            animationId = requestAnimationFrame(animate);
-        } else {
-            animationId = null;
-            window.location.href = url;
-        }
+      const elapsed = time - start;
+      const progress = Math.min(elapsed / duration, 1) * 100;
+      progressBar.style.width = progress + '%';
+      if (elapsed < duration) {
+        animationId = requestAnimationFrame(animate);
+      } else {
+        animationId = null;
+        window.location.href = currentRedirectUrl;
+        setTimeout(() => {
+          redirectOverlay.classList.remove('active');
+          progressBar.style.width = '0%';
+        }, 100);
+      }
     }
-
     animationId = requestAnimationFrame(animate);
+  } catch (error) {
+    console.error('Ошибка загрузки игры:', error);
+    document.getElementById('redirect-subtitle').textContent = 'Ошибка загрузки игры';
+    document.getElementById('retry-game').classList.remove('hidden');
+    document.getElementById('retry-game').onclick = () => startGameRedirect(gameName, gamePath);
+  }
 }
-
+function startCustomRedirect(url, title = 'Перенаправление...') {
+  if (animationId) cancelAnimationFrame(animationId);
+  currentRedirectUrl = url;
+  document.getElementById('redirect-title').textContent = title;
+  document.getElementById('redirect-subtitle').textContent = 'Подготовка...';
+  document.getElementById('retry-game').classList.add('hidden');
+  redirectOverlay.classList.add("active");
+  progressBar.style.width = '0%';
+  const duration = 1000 + Math.random() * 2000;
+  const start = performance.now();
+  function animate(time) {
+    const elapsed = time - start;
+    const progress = Math.min(elapsed / duration, 1) * 100;
+    progressBar.style.width = progress + '%';
+    if (elapsed < duration) {
+      animationId = requestAnimationFrame(animate);
+    } else {
+      animationId = null;
+      window.location.href = url;
+    }
+  }
+  animationId = requestAnimationFrame(animate);
+}
 const redirectOverlay = document.getElementById("redirect-overlay");
 const progressBar = document.getElementById("progress-bar");
-
 document.querySelectorAll(".play").forEach(btn => {
-    btn.onclick = () => {
-        const gameName = btn.dataset.game;
-        const gamePath = btn.dataset.link;
-        if (gameName && gamePath) {
-            startGameRedirect(gameName, gamePath);
-        }
-    };
+  btn.onclick = () => {
+    const gameName = btn.dataset.game;
+    const gamePath = btn.dataset.link;
+    if (gameName && gamePath) startGameRedirect(gameName, gamePath);
+  };
 });
-
-document.querySelectorAll(".external-link").forEach(link => {
-    link.onclick = (e) => {
-        e.preventDefault();
-        const url = link.href;
-        const hostname = new URL(url).hostname;
-        document.getElementById('external-url').textContent = hostname;
-        document.getElementById('external-warning').classList.remove('hidden');
-        currentRedirectUrl = url;
-    };
-});
-
 document.getElementById("random-game").onclick = () => {
-    if (games.length === 0) return;
-    const randomGame = games[Math.floor(Math.random() * games.length)];
-    startGameRedirect(randomGame.name, randomGame.path);
+  if (games.length === 0) return;
+  const randomGame = games[Math.floor(Math.random() * games.length)];
+  startGameRedirect(randomGame.name, randomGame.path);
 };
-
 document.getElementById("sponsors-btn").onclick = () => {
-    startCustomRedirect("sponsors.html", "Загрузка спонсоров...");
+  startCustomRedirect("sponsors.html", "Загрузка спонсоров...");
 };
-
 document.getElementById("about-btn").onclick = () => {
-    document.getElementById("about-page").classList.remove("hidden");
+  document.getElementById("about-page").classList.remove("hidden");
 };
-
 document.getElementById("close-about").onclick = () => {
-    document.getElementById("about-page").classList.add("hidden");
+  document.getElementById("about-page").classList.add("hidden");
 };
-
 document.getElementById("cancel-redirect").onclick = () => {
-    redirectOverlay.classList.remove("active");
-    progressBar.style.width = '0%';
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-    }
+  redirectOverlay.classList.remove("active");
+  progressBar.style.width = '0%';
+  if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
 };
-
 document.getElementById("confirm-external").onclick = () => {
-    document.getElementById('external-warning').classList.add('hidden');
-    if (currentRedirectUrl) {
-        window.open(currentRedirectUrl, '_blank', 'noopener,noreferrer');
-        currentRedirectUrl = '';
-    }
+  document.getElementById('external-warning').classList.add('hidden');
+  if (currentRedirectUrl) { window.open(currentRedirectUrl, '_blank', 'noopener,noreferrer'); currentRedirectUrl = ''; }
 };
-
 document.getElementById("cancel-external").onclick = () => {
-    document.getElementById('external-warning').classList.add('hidden');
-    currentRedirectUrl = '';
+  document.getElementById('external-warning').classList.add('hidden');
+  currentRedirectUrl = '';
 };
-
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        document.getElementById("about-page").classList.add("hidden");
-        document.getElementById('external-warning').classList.add('hidden');
-        if (!redirectOverlay.classList.contains('active')) {
-            redirectOverlay.classList.remove("active");
-            progressBar.style.width = '0%';
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
-            }
-        }
+  if (e.key === 'Escape') {
+    document.getElementById("about-page").classList.add("hidden");
+    document.getElementById('external-warning').classList.add('hidden');
+    if (!redirectOverlay.classList.contains('active')) {
+      redirectOverlay.classList.remove("active");
+      progressBar.style.width = '0%';
+      if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
     }
+  }
 });
-
 window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.getElementById('page-loader').classList.add('hidden');
-        setTimeout(() => {
-            document.getElementById('page-loader').style.display = 'none';
-        }, 500);
-    }, 800);
+  setTimeout(() => {
+    document.getElementById('page-loader').classList.add('hidden');
+    setTimeout(() => { document.getElementById('page-loader').style.display = 'none'; }, 500);
+  }, 800);
 });
-
 document.getElementById('current-year').textContent = new Date().getFullYear();
-
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(err => {
-        console.log('SW регистрация не удалась:', err);
-    });
+  navigator.serviceWorker.register('/sw.js').catch(err => { console.log('SW регистрация не удалась:', err); });
 }
 </script>
 </body>
