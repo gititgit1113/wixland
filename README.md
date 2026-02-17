@@ -56,4 +56,4 @@ Join our Telegram community for the latest updates and news:
 
 ---
 
-*Made with <3 by the Wix's Space community
+*Made with <3 by the Wix's Space community*
